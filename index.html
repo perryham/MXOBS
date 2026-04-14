@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consolidated Work Tracker | Operations Technology and Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --navy: #1a2744;
+            --slate: #2c3e5a;
+            --teal: #0f7b6c;
+            --teal-light: #14a890;
+            --gold: #d4a843;
+            --coral: #c75c3a;
+            --cream: #f4f1eb;
+            --off-white: #faf9f7;
+            --muted: #8899aa;
+            --text: #1a2744;
+            --border: #ddd8cf;
+            --green: #2d8659;
+            --amber: #d4a843;
+            --red: #c75c3a;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--cream);
+            margin: 0;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            background: var(--navy);
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .header-title {
+            font-family: 'Fraunces', serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Tabs */
+        nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 28px;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 12px 18px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid var(--teal);
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        /* Layout */
+        .container {
+            padding: 20px 28px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-panel { display: none; }
+        .dashboard-panel.active { display: block; }
+
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(26,39,68,0.06);
+        }
+
+        .stat-card {
+            border-left: 4px solid var(--teal);
+        }
+
+        .stat-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+        .stat-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; line-height: 1.1; color: var(--navy); }
+        .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+        h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 28px 0 14px;
+            letter-spacing: -0.3px;
+        }
+
+        h2:first-child { margin-top: 0; }
+
+        /* Heatmap */
+        .heatmap-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin-top: 12px; }
+        .heatmap-cell { border-radius: 6px; padding: 12px 6px; text-align: center; }
+        .wk-label { font-size: 10px; font-weight: 600; }
+        .wk-val { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; line-height: 1.2; }
+
+        /* Project Snapshot */
+        .project-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .project-mini { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; background: var(--off-white); }
+        .prog-bg { margin-top: 8px; height: 6px; background: #e8e4dd; border-radius: 3px; overflow: hidden; }
+        .prog-fill { height: 100%; transition: width 0.5s ease; }
+
+        /* Comparison Row */
+        .comp-row { display: grid; grid-template-columns: 130px 1fr 1fr; gap: 8px; font-size: 12px; align-items: center; margin-bottom: 10px; }
+        .comp-tag-before { background: #fdf2f0; padding: 6px 10px; border-radius: 4px; color: var(--coral); font-size: 11px; }
+        .comp-tag-after { background: #eef8f5; padding: 6px 10px; border-radius: 4px; color: var(--teal); font-size: 11px; }
+
+        /* Control Insight */
+        .insight-card { background: var(--navy); color: white; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <div class="header-title">Consolidated work tracker</div>
+        <div class="header-sub">Operations Technology and Data | Portfolio visibility, planning, and control</div>
+    </div>
+    <div style="font-size: 12px; color: var(--muted);">FY2026 | 114 tasks | 6 resources</div>
+</header>
+
+<nav id="tabs">
+    <button class="tab-btn active" onclick="showTab('overview')">Portfolio overview</button>
+    <button class="tab-btn" onclick="showTab('capacity')">Capacity and workload</button>
+    <button class="tab-btn" onclick="showTab('heatmap')">Milestone heatmap</button>
+    <button class="tab-btn" onclick="showTab('projects')">Project status</button>
+    <button class="tab-btn" onclick="showTab('radar')">Before and after</button>
+    <button class="tab-btn" onclick="showTab('control')">Control room</button>
+</nav>
+
+<div class="container">
+    
+    <div id="overview" class="dashboard-panel active">
+        <div class="grid-4">
+            <div class="card stat-card" style="border-left-color: var(--navy)"><div class="stat-label">Total tasks</div><div class="stat-value">114</div><div class="stat-sub">Across 15 projects</div></div>
+            <div class="card stat-card"><div class="stat-label">Total effort</div><div class="stat-value">4,558 hrs</div><div class="stat-sub">Estimated across portfolio</div></div>
+            <div class="card stat-card" style="border-left-color: var(--gold)"><div class="stat-label">Teams</div><div class="stat-value">2</div><div class="stat-sub">Ops Tech and Data Governance</div></div>
+            <div class="card stat-card" style="border-left-color: var(--green)"><div class="stat-label">Active resources</div><div class="stat-value">6</div><div class="stat-sub">Named task owners</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="card"><h2>Task status distribution</h2><canvas id="statusChart"></canvas></div>
+            <div class="card"><h2>Effort by project phase</h2><canvas id="phaseChart"></canvas></div>
+        </div>
+        <div class="card"><h2>Effort allocation by project</h2><canvas id="projectEffortChart"></canvas></div>
+    </div>
+
+    <div id="capacity" class="dashboard-panel">
+        <div class="grid-3">
+            <div class="card stat-card" style="border-left-color: var(--coral)"><div class="stat-label">Highest allocation (FY26)</div><div class="stat-value" style="font-size: 24px;">Grace Li</div><div class="stat-sub">47.5 FTE-weeks cumulative</div></div>
+            <div class="card stat-card" style="border-left-color: var(--red)"><div class="stat-label">Peak week</div><div class="stat-value">W02</div><div class="stat-sub">33 concurrent tasks</div></div>
+            <div class="card stat-card"><div class="stat-label">Average weekly tasks</div><div class="stat-value">12.6</div><div class="stat-sub">Across FY26 W01-W18</div></div>
+        </div>
+        <div class="card"><h2>FY2026 cumulative allocation by resource</h2><canvas id="resourceAllocChart"></canvas></div>
+        <div class="card" style="margin-top:20px;"><h2>Effort distribution by task owner</h2><canvas id="ownerEffortChart"></canvas></div>
+    </div>
+
+    <div id="heatmap" class="dashboard-panel">
+        <div class="grid-3">
+            <div class="card stat-card" style="border-left-color: var(--coral)"><div class="stat-label">Peak congestion</div><div class="stat-value">33 tasks</div><div class="stat-sub">FY2026 W02</div></div>
+            <div class="card stat-card" style="border-left-color: var(--gold)"><div class="stat-label">Congestion risk weeks</div><div class="stat-value">4 weeks</div><div class="stat-sub">W01 to W04 above 20 concurrent</div></div>
+            <div class="card stat-card" style="border-left-color: var(--green)"><div class="stat-label">Steady state</div><div class="stat-value">7-11 tasks</div><div class="stat-sub">W05 onward</div></div>
+        </div>
+        <div class="card">
+            <h2>Weekly milestone congestion heatmap (FY2026)</h2>
+            <div class="heatmap-grid" id="heatmapGrid"></div>
+        </div>
+        <div class="card" style="margin-top:20px;"><h2>Weekly allocation trend</h2><canvas id="trendChart"></canvas></div>
+    </div>
+
+    <div id="projects" class="dashboard-panel">
+        <div class="card"><h2>Project delivery status</h2><canvas id="projectStatusChart"></canvas></div>
+        <h2>Project snapshot</h2>
+        <div class="project-grid" id="projectSnapshotGrid"></div>
+    </div>
+
+    <div id="radar" class="dashboard-panel">
+        <div class="grid-2">
+            <div class="card"><h2>Capability maturity shift</h2><canvas id="radarChart"></canvas></div>
+            <div class="card">
+                <h2>Before vs. after comparison</h2>
+                <div id="comparisonList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="control" class="dashboard-panel">
+        <div class="grid-4">
+            <div class="card stat-card"><div class="stat-label">Portfolio completion</div><div class="stat-value">27%</div><div class="stat-sub">31 of 114 tasks complete</div></div>
+            <div class="card stat-card" style="border-left-color: var(--gold)"><div class="stat-label">In-flight tasks</div><div class="stat-value">45</div><div class="stat-sub">39% of portfolio active</div></div>
+            <div class="card stat-card" style="border-left-color: var(--muted)"><div class="stat-label">Backlog depth</div><div class="stat-value">38</div><div class="stat-sub">Not started, sequenced</div></div>
+            <div class="card stat-card" style="border-left-color: var(--navy)"><div class="stat-label">Resource count</div><div class="stat-value">6</div><div class="stat-sub">Named owners</div></div>
+        </div>
+        <div class="grid-2">
+            <div class="card"><h2>Team workload balance</h2><canvas id="teamWorkloadChart"></canvas></div>
+            <div class="card insight-card">
+                <div style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Key insight</div>
+                <div style="font-size: 15px; line-height: 1.6;">
+                    Grace Li carries <span style="color: var(--gold); font-weight: 700;">49%</span> of total estimated effort (2,242 hrs). 
+                    Concentration risk flagged for succession planning.
+                </div>
+                <hr style="margin: 16px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.15);">
+                <div style="font-size: 12px; color: var(--muted);">Recommended action</div>
+                <div style="font-size: 13px; margin-top: 4px;">Redistribute Seal of Trust audit tasks post-FY26 Q1.</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const colors = {
+        navy: "#1a2744", teal: "#0f7b6c", gold: "#d4a843", coral: "#c75c3a", 
+        green: "#2d8659", muted: "#8899aa", red: "#c75c3a", tealLight: "#14a890"
+    };
+
+    function showTab(tabId) {
+        document.querySelectorAll('.dashboard-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    window.onload = function() {
+        // Shared chart options
+        Chart.defaults.font.family = "'DM Sans', sans-serif";
+        Chart.defaults.color = colors.muted;
+
+        // --- Status Doughnut ---
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Complete', 'In progress', 'Not started'],
+                datasets: [{
+                    data: [31, 45, 38],
+                    backgroundColor: [colors.green, colors.teal, colors.muted],
+                    borderWidth: 0,
+                    cutout: '65%'
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // --- Phase Bar ---
+        new Chart(document.getElementById('phaseChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Execution', 'Operational', 'Planning', 'Initiation', 'Monitoring', 'Closure'],
+                datasets: [{
+                    label: 'Estimated hours',
+                    data: [1767, 1409, 804, 300, 178, 100],
+                    backgroundColor: colors.teal,
+                    borderRadius: 4
+                }]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+        });
+
+        // --- Project Effort Bar ---
+        new Chart(document.getElementById('projectEffortChart'), {
+            type: 'bar',
+            data: {
+                labels: ['CAD/AVL', 'Seal of Trust', 'RTSI', 'Work Train', 'HASTUS', 'IVU', 'ONTC', 'INIT Ops'],
+                datasets: [{
+                    data: [1231, 790, 482, 470, 386, 364, 260, 177],
+                    backgroundColor: [colors.navy, colors.teal, colors.teal, colors.muted, colors.muted, colors.muted, colors.muted, colors.muted],
+                    borderRadius: 4
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+
+        // --- Resource Allocation (FTE) ---
+        new Chart(document.getElementById('resourceAllocChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Grace Li', 'Eugene Loiko', 'Derek Raczka', 'Niro Xavier', 'Perry Ham'],
+                datasets: [{
+                    label: 'FTE-weeks',
+                    data: [47.54, 21.70, 5.25, 2.85, 2.62],
+                    backgroundColor: (ctx) => {
+                        const val = ctx.raw;
+                        return val > 20 ? colors.coral : (val > 5 ? colors.gold : colors.teal);
+                    },
+                    borderRadius: 4
+                }]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+        });
+
+        // --- Owner Effort (Team split) ---
+        new Chart(document.getElementById('ownerEffortChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Grace Li', 'Eugene Loiko', 'Derek Raczka', 'Perry Ham', 'Niro Xavier', 'Nauaroon Das'],
+                datasets: [{
+                    label: 'Hours',
+                    data: [2242, 1722, 290, 154, 104, 46],
+                    backgroundColor: [colors.teal, colors.navy, colors.teal, colors.teal, colors.navy, colors.teal],
+                    borderRadius: 4
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+
+        // --- Heatmap Generation ---
+        const weeklyData = [
+            { wk: "W01", tasks: 32 }, { wk: "W02", tasks: 33 }, { wk: "W03", tasks: 23 },
+            { wk: "W04", tasks: 20 }, { wk: "W05", tasks: 7 }, { wk: "W06", tasks: 7 },
+            { wk: "W07", tasks: 7 }, { wk: "W08", tasks: 8 }, { wk: "W09", tasks: 10 },
+            { wk: "W10", tasks: 10 }, { wk: "W11", tasks: 11 }, { wk: "W12", tasks: 9 },
+            { wk: "W13", tasks: 10 }, { wk: "W14", tasks: 8 }, { wk: "W15", tasks: 8 },
+            { wk: "W16", tasks: 7 }, { wk: "W17", tasks: 9 }, { wk: "W18", tasks: 7 }
+        ];
+        const hgrid = document.getElementById('heatmapGrid');
+        weeklyData.forEach(w => {
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
+            const bg = w.tasks >= 30 ? colors.coral : (w.tasks >= 15 ? colors.gold : (w.tasks >= 10 ? colors.tealLight : "#b8d4ce"));
+            cell.style.backgroundColor = bg;
+            cell.style.color = w.tasks >= 15 ? 'white' : colors.navy;
+            cell.innerHTML = `<div class="wk-label">${w.wk}</div><div class="wk-val">${w.tasks}</div><div style="font-size:9px">tasks</div>`;
+            hgrid.appendChild(cell);
+        });
+
+        // --- Trend Line ---
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: weeklyData.map(d => d.wk),
+                datasets: [
+                    { label: 'Concurrent tasks', data: weeklyData.map(d => d.tasks), borderColor: colors.navy, tension: 0.3 },
+                    { label: 'FTE Allocation', data: [4.6, 4.8, 3.4, 3.1, 0.8, 0.8, 0.7, 1.0, 1.9, 1.9, 2.4, 1.8, 2.0, 1.4, 1.4, 1.1, 1.6, 1.3], borderColor: colors.teal, tension: 0.3 }
+                ]
+            }
+        });
+
+        // --- Project Stacked Bar ---
+        new Chart(document.getElementById('projectStatusChart'), {
+            type: 'bar',
+            data: {
+                labels: ['CAD/AVL', 'RTSI', 'Seal of Trust', 'Work Train', 'INIT Ops', 'HASTUS', 'IVU', 'ONTC'],
+                datasets: [
+                    { label: 'Complete', data: [5, 16, 0, 4, 1, 1, 0, 1], backgroundColor: colors.green },
+                    { label: 'In progress', data: [11, 3, 0, 1, 8, 3, 3, 1], backgroundColor: colors.teal },
+                    { label: 'Not started', data: [8, 0, 12, 4, 0, 4, 4, 4], backgroundColor: colors.muted }
+                ]
+            },
+            options: { indexAxis: 'y', scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        // --- Project Snapshot Cards ---
+        const snapshots = [
+            { name: "CAD/AVL", complete: 5, inProgress: 11, notStarted: 8 },
+            { name: "RTSI", complete: 16, inProgress: 3, notStarted: 0 },
+            { name: "Seal of Trust", complete: 0, inProgress: 0, notStarted: 12 },
+            { name: "Work Train", complete: 4, inProgress: 1, notStarted: 4 }
+        ];
+        const sGrid = document.getElementById('projectSnapshotGrid');
+        snapshots.forEach(p => {
+            const total = p.complete + p.inProgress + p.notStarted;
+            const pct = Math.round((p.complete / total) * 100);
+            const color = pct === 100 ? colors.green : (pct > 50 ? colors.teal : (pct > 0 ? colors.gold : colors.muted));
+            sGrid.innerHTML += `
+                <div class="project-mini">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--navy);">${p.name}</div>
+                    <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">${total} tasks</div>
+                    <div class="prog-bg"><div class="prog-fill" style="width: ${pct}%; background: ${color};"></div></div>
+                    <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">${pct}% complete</div>
+                </div>
+            `;
+        });
+
+        // --- Radar Chart ---
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Visibility', 'Data consistency', 'Decision speed', 'Capacity clarity', 'Risk detection', 'Lean efficiency'],
+                datasets: [
+                    { label: 'Before', data: [25, 20, 30, 15, 20, 30], borderColor: colors.coral, backgroundColor: 'rgba(199, 92, 58, 0.15)' },
+                    { label: 'After', data: [90, 85, 80, 85, 75, 80], borderColor: colors.teal, backgroundColor: 'rgba(15, 123, 108, 0.2)' }
+                ]
+            }
+        });
+
+        // --- Comparison List ---
+        const comps = [
+            { dim: "Portfolio visibility", before: "Fragmented", after: "Single view" },
+            { dim: "Data sources", before: "Multiple sheets", after: "Centralized" },
+            { dim: "Capacity management", before: "Assumption-based", after: "Fact-based" }
+        ];
+        const cList = document.getElementById('comparisonList');
+        comps.forEach(c => {
+            cList.innerHTML += `
+                <div class="comp-row">
+                    <div style="font-weight: 600; color: var(--navy);">${c.dim}</div>
+                    <div class="comp-tag-before">${c.before}</div>
+                    <div class="comp-tag-after">${c.after}</div>
+                </div>
+            `;
+        });
+
+        // --- Team Workload ---
+        new Chart(document.getElementById('teamWorkloadChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ops Technology', 'Data Governance'],
+                datasets: [{ label: 'Tasks', data: [61, 53], backgroundColor: [colors.navy, colors.teal] }]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+        });
+    }
+</script>
+
+</body>
+</html>
