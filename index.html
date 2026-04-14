@@ -1,449 +1,467 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consolidated Work Tracker | Operations Technology and Data</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --navy: #1a2744;
-            --slate: #2c3e5a;
-            --teal: #0f7b6c;
-            --teal-light: #14a890;
-            --gold: #d4a843;
-            --coral: #c75c3a;
-            --cream: #f4f1eb;
-            --off-white: #faf9f7;
-            --muted: #8899aa;
-            --text: #1a2744;
-            --border: #ddd8cf;
-            --green: #2d8659;
-            --amber: #d4a843;
-            --red: #c75c3a;
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--cream);
-            margin: 0;
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Header */
-        header {
-            background: var(--navy);
-            padding: 20px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-        }
-
-        .header-title {
-            font-family: 'Fraunces', serif;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header-sub {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-
-        /* Tabs */
-        nav {
-            background: white;
-            border-bottom: 1px solid var(--border);
-            padding: 0 28px;
-            display: flex;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            padding: 12px 18px;
-            font-size: 13px;
-            color: var(--muted);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active {
-            border-bottom: 2px solid var(--teal);
-            color: var(--teal);
-            font-weight: 600;
-        }
-
-        /* Layout */
-        .container {
-            padding: 20px 28px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .dashboard-panel { display: none; }
-        .dashboard-panel.active { display: block; }
-
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 1px 4px rgba(26,39,68,0.06);
-        }
-
-        .stat-card {
-            border-left: 4px solid var(--teal);
-        }
-
-        .stat-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
-        .stat-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; line-height: 1.1; color: var(--navy); }
-        .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-        h2 {
-            font-family: 'Fraunces', serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--navy);
-            margin: 28px 0 14px;
-            letter-spacing: -0.3px;
-        }
-
-        h2:first-child { margin-top: 0; }
-
-        /* Heatmap */
-        .heatmap-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin-top: 12px; }
-        .heatmap-cell { border-radius: 6px; padding: 12px 6px; text-align: center; }
-        .wk-label { font-size: 10px; font-weight: 600; }
-        .wk-val { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; line-height: 1.2; }
-
-        /* Project Snapshot */
-        .project-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .project-mini { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; background: var(--off-white); }
-        .prog-bg { margin-top: 8px; height: 6px; background: #e8e4dd; border-radius: 3px; overflow: hidden; }
-        .prog-fill { height: 100%; transition: width 0.5s ease; }
-
-        /* Comparison Row */
-        .comp-row { display: grid; grid-template-columns: 130px 1fr 1fr; gap: 8px; font-size: 12px; align-items: center; margin-bottom: 10px; }
-        .comp-tag-before { background: #fdf2f0; padding: 6px 10px; border-radius: 4px; color: var(--coral); font-size: 11px; }
-        .comp-tag-after { background: #eef8f5; padding: 6px 10px; border-radius: 4px; color: var(--teal); font-size: 11px; }
-
-        /* Control Insight */
-        .insight-card { background: var(--navy); color: white; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OBS Technology and Data - Work Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f4f1eb;min-height:100vh}
+select,button{font-family:'DM Sans',sans-serif;outline:none}
+::-webkit-scrollbar{height:6px;width:6px}
+::-webkit-scrollbar-thumb{background:#bbb;border-radius:3px}
+.hm-cell:hover{opacity:0.85;transform:scale(1.03)}
+.hm-cell{transition:all 0.15s}
+.gantt-row:hover{background:#f9f7f3}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 </head>
 <body>
-
-<header>
-    <div>
-        <div class="header-title">Consolidated work tracker</div>
-        <div class="header-sub">Operations Technology and Data | Portfolio visibility, planning, and control</div>
-    </div>
-    <div style="font-size: 12px; color: var(--muted);">FY2026 | 114 tasks | 6 resources</div>
-</header>
-
-<nav id="tabs">
-    <button class="tab-btn active" onclick="showTab('overview')">Portfolio overview</button>
-    <button class="tab-btn" onclick="showTab('capacity')">Capacity and workload</button>
-    <button class="tab-btn" onclick="showTab('heatmap')">Milestone heatmap</button>
-    <button class="tab-btn" onclick="showTab('projects')">Project status</button>
-    <button class="tab-btn" onclick="showTab('radar')">Before and after</button>
-    <button class="tab-btn" onclick="showTab('control')">Control room</button>
-</nav>
-
-<div class="container">
-    
-    <div id="overview" class="dashboard-panel active">
-        <div class="grid-4">
-            <div class="card stat-card" style="border-left-color: var(--navy)"><div class="stat-label">Total tasks</div><div class="stat-value">114</div><div class="stat-sub">Across 15 projects</div></div>
-            <div class="card stat-card"><div class="stat-label">Total effort</div><div class="stat-value">4,558 hrs</div><div class="stat-sub">Estimated across portfolio</div></div>
-            <div class="card stat-card" style="border-left-color: var(--gold)"><div class="stat-label">Teams</div><div class="stat-value">2</div><div class="stat-sub">Ops Tech and Data Governance</div></div>
-            <div class="card stat-card" style="border-left-color: var(--green)"><div class="stat-label">Active resources</div><div class="stat-value">6</div><div class="stat-sub">Named task owners</div></div>
-        </div>
-        <div class="grid-2">
-            <div class="card"><h2>Task status distribution</h2><canvas id="statusChart"></canvas></div>
-            <div class="card"><h2>Effort by project phase</h2><canvas id="phaseChart"></canvas></div>
-        </div>
-        <div class="card"><h2>Effort allocation by project</h2><canvas id="projectEffortChart"></canvas></div>
-    </div>
-
-    <div id="capacity" class="dashboard-panel">
-        <div class="grid-3">
-            <div class="card stat-card" style="border-left-color: var(--coral)"><div class="stat-label">Highest allocation (FY26)</div><div class="stat-value" style="font-size: 24px;">Grace Li</div><div class="stat-sub">47.5 FTE-weeks cumulative</div></div>
-            <div class="card stat-card" style="border-left-color: var(--red)"><div class="stat-label">Peak week</div><div class="stat-value">W02</div><div class="stat-sub">33 concurrent tasks</div></div>
-            <div class="card stat-card"><div class="stat-label">Average weekly tasks</div><div class="stat-value">12.6</div><div class="stat-sub">Across FY26 W01-W18</div></div>
-        </div>
-        <div class="card"><h2>FY2026 cumulative allocation by resource</h2><canvas id="resourceAllocChart"></canvas></div>
-        <div class="card" style="margin-top:20px;"><h2>Effort distribution by task owner</h2><canvas id="ownerEffortChart"></canvas></div>
-    </div>
-
-    <div id="heatmap" class="dashboard-panel">
-        <div class="grid-3">
-            <div class="card stat-card" style="border-left-color: var(--coral)"><div class="stat-label">Peak congestion</div><div class="stat-value">33 tasks</div><div class="stat-sub">FY2026 W02</div></div>
-            <div class="card stat-card" style="border-left-color: var(--gold)"><div class="stat-label">Congestion risk weeks</div><div class="stat-value">4 weeks</div><div class="stat-sub">W01 to W04 above 20 concurrent</div></div>
-            <div class="card stat-card" style="border-left-color: var(--green)"><div class="stat-label">Steady state</div><div class="stat-value">7-11 tasks</div><div class="stat-sub">W05 onward</div></div>
-        </div>
-        <div class="card">
-            <h2>Weekly milestone congestion heatmap (FY2026)</h2>
-            <div class="heatmap-grid" id="heatmapGrid"></div>
-        </div>
-        <div class="card" style="margin-top:20px;"><h2>Weekly allocation trend</h2><canvas id="trendChart"></canvas></div>
-    </div>
-
-    <div id="projects" class="dashboard-panel">
-        <div class="card"><h2>Project delivery status</h2><canvas id="projectStatusChart"></canvas></div>
-        <h2>Project snapshot</h2>
-        <div class="project-grid" id="projectSnapshotGrid"></div>
-    </div>
-
-    <div id="radar" class="dashboard-panel">
-        <div class="grid-2">
-            <div class="card"><h2>Capability maturity shift</h2><canvas id="radarChart"></canvas></div>
-            <div class="card">
-                <h2>Before vs. after comparison</h2>
-                <div id="comparisonList"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="control" class="dashboard-panel">
-        <div class="grid-4">
-            <div class="card stat-card"><div class="stat-label">Portfolio completion</div><div class="stat-value">27%</div><div class="stat-sub">31 of 114 tasks complete</div></div>
-            <div class="card stat-card" style="border-left-color: var(--gold)"><div class="stat-label">In-flight tasks</div><div class="stat-value">45</div><div class="stat-sub">39% of portfolio active</div></div>
-            <div class="card stat-card" style="border-left-color: var(--muted)"><div class="stat-label">Backlog depth</div><div class="stat-value">38</div><div class="stat-sub">Not started, sequenced</div></div>
-            <div class="card stat-card" style="border-left-color: var(--navy)"><div class="stat-label">Resource count</div><div class="stat-value">6</div><div class="stat-sub">Named owners</div></div>
-        </div>
-        <div class="grid-2">
-            <div class="card"><h2>Team workload balance</h2><canvas id="teamWorkloadChart"></canvas></div>
-            <div class="card insight-card">
-                <div style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Key insight</div>
-                <div style="font-size: 15px; line-height: 1.6;">
-                    Grace Li carries <span style="color: var(--gold); font-weight: 700;">49%</span> of total estimated effort (2,242 hrs). 
-                    Concentration risk flagged for succession planning.
-                </div>
-                <hr style="margin: 16px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.15);">
-                <div style="font-size: 12px; color: var(--muted);">Recommended action</div>
-                <div style="font-size: 13px; margin-top: 4px;">Redistribute Seal of Trust audit tasks post-FY26 Q1.</div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
+<div id="root"></div>
 <script>
-    const colors = {
-        navy: "#1a2744", teal: "#0f7b6c", gold: "#d4a843", coral: "#c75c3a", 
-        green: "#2d8659", muted: "#8899aa", red: "#c75c3a", tealLight: "#14a890"
-    };
+"use strict";
+var h=React.createElement,us=React.useState,um=React.useMemo;
+var C={navy:"#1a2744",slate:"#2c3e5a",teal:"#0f7b6c",tl:"#14a890",gold:"#d4a843",coral:"#c75c3a",cream:"#f4f1eb",ow:"#faf9f7",mu:"#8899aa",tx:"#1a2744",bd:"#ddd8cf",gn:"#2d8659",wh:"#ffffff"};
 
-    function showTab(tabId) {
-        document.querySelectorAll('.dashboard-panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
+var T=[
+{r:"T.18",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Design phase planning",s:"2026-03-16",e:"2026-04-01",st:"IN PROGRESS",pc:1,ow:"Grace Li",ef:20,al:0.167},
+{r:"T.19",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Design phase workshops (Internal)",s:"2026-04-01",e:"2026-04-30",st:"IN PROGRESS",pc:0.4,ow:"Grace Li",ef:42,al:0.21},
+{r:"T.20",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"DG Requirement Package Prep",s:"2026-04-27",e:"2026-05-15",st:"IN PROGRESS",pc:0.33,ow:"Grace Li",ef:48,al:0.4},
+{r:"T.21",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"Ops Safety Hub - DG Audit",s:"2026-05-18",e:"2026-06-18",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:60,al:0.3},
+{r:"T.22",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"RTSI - DG Audit",s:"2026-06-01",e:"2026-07-01",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:100,al:0.5},
+{r:"T.23",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"CAD/AVL INIT MobileReport - DG Audit",s:"2026-06-18",e:"2026-07-18",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:100,al:0.5},
+{r:"T.24",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"Stations Data - DG Audit",s:"2026-07-02",e:"2026-08-02",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:40,al:0.2},
+{r:"T.25",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"BPR - DG Audit",s:"2026-08-24",e:"2026-09-24",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:80,al:0.4},
+{r:"T.26",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"MySafety - DG Audit",s:"2026-08-24",e:"2026-09-24",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:15,al:0.075},
+{r:"T.27",tm:"Data Governance",pj:"FY25 Quick Kaizen",ph:"7. OPERATIONAL",tk:"DG Quick Wins - List",s:"2026-03-06",e:"2026-03-11",st:"IN PROGRESS",pc:1,ow:"Nauaroon Das",ef:16,al:0.4},
+{r:"T.28",tm:"Data Governance",pj:"FY25 Quick Kaizen",ph:"7. OPERATIONAL",tk:"DG Quick Wins - Execution",s:"2026-03-12",e:"2026-03-31",st:"IN PROGRESS",pc:0.5,ow:"Nauaroon Das",ef:30,al:0.25},
+{r:"T.29",tm:"Data Governance",pj:"CAD/AVL - INIT",ph:"7. OPERATIONAL",tk:"Jira Support Week 50",s:"2026-03-16",e:"2026-03-23",st:"COMPLETE",pc:0.75,ow:"Derek Raczka",ef:20,al:0.25},
+{r:"T.30",tm:"Data Governance",pj:"On-boarding",ph:"7. OPERATIONAL",tk:"4 week on-boarding",s:"2026-03-01",e:"2026-03-31",st:"COMPLETE",pc:1,ow:"Grace Li",ef:80,al:0.4},
+{r:"T.31",tm:"Data Governance",pj:"FY26 Framework",ph:"7. OPERATIONAL",tk:"Process guidelines, tiering, assessment",s:"2026-04-01",e:"2026-06-30",st:"COMPLETE",pc:1,ow:"Perry Ham",ef:80,al:0.154},
+{r:"T.32",tm:"Data Governance",pj:"CAD/AVL Project",ph:"4. EXECUTION",tk:"Software Design Validation",s:"2026-06-22",e:"2026-11-27",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:228,al:0.248},
+{r:"T.33",tm:"Data Governance",pj:"CAD/AVL Project",ph:"4. EXECUTION",tk:"Config testing validation",s:"2026-05-28",e:"2026-12-11",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:282,al:0.243},
+{r:"T.34",tm:"Data Governance",pj:"CAD/AVL Project",ph:"4. EXECUTION",tk:"Implementation confirmation",s:"2027-01-01",e:"2027-01-25",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:32,al:0.2},
+{r:"T.35",tm:"Data Governance",pj:"CAD/AVL Project",ph:"4. EXECUTION",tk:"Phase 2 Mini Fleet",s:"2027-01-18",e:"2027-04-01",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:212,al:0.482},
+{r:"T.36",tm:"Data Governance",pj:"CAD/AVL Project",ph:"5. MONITORING",tk:"Phase 3 Roll out",s:"2027-04-12",e:"2027-05-12",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:88,al:0.44},
+{r:"T.43",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Vendor Workshops 1-6",s:"2026-03-10",e:"2026-04-30",st:"IN PROGRESS",pc:0.75,ow:"Perry Ham",ef:50,al:0.156},
+{r:"T.44",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Vendor Workshops 1-6",s:"2026-03-10",e:"2026-04-30",st:"IN PROGRESS",pc:0.75,ow:"Derek Raczka",ef:50,al:0.156},
+{r:"T.45",tm:"Data Governance",pj:"IVU",ph:"2. INITIATION",tk:"DG Scope Proposal Phase 0-3",s:"2026-03-24",e:"2026-03-31",st:"IN PROGRESS",pc:0.9,ow:"Perry Ham",ef:8,al:0.1},
+{r:"T.46",tm:"Data Governance",pj:"IVU",ph:"3. PLANNING",tk:"Phase 0-3 DG Req Checklist",s:"2026-04-01",e:"2026-04-08",st:"IN PROGRESS",pc:0.95,ow:"Grace Li",ef:8,al:0.1},
+{r:"T.47",tm:"Data Governance",pj:"IVU",ph:"3. PLANNING",tk:"Phase 0 activity planning",s:"2026-04-09",e:"2026-04-16",st:"IN PROGRESS",pc:0,ow:"Grace Li",ef:8,al:0.1},
+{r:"T.48",tm:"Data Governance",pj:"IVU",ph:"4. EXECUTION",tk:"Phase 0 DG Compliance",s:"2026-04-20",e:"2026-05-01",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:40,al:0.5},
+{r:"T.49",tm:"Data Governance",pj:"IVU",ph:"4. EXECUTION",tk:"Phase 1 DG Compliance",s:"2026-07-28",e:"2026-08-28",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:100,al:0.5},
+{r:"T.52",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Vendor Workshops 7-8",s:"2026-06-01",e:"2026-06-15",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:48,al:0.4},
+{r:"T.53",tm:"Data Governance",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Vendor Workshops 7-8",s:"2026-06-01",e:"2026-06-15",st:"NOT STARTED",pc:0,ow:"Derek Raczka",ef:20,al:0.167},
+{r:"T.54",tm:"Data Governance",pj:"HASTUS",ph:"2. INITIATION",tk:"Scope Refinement",s:"2026-03-30",e:"2026-04-03",st:"IN PROGRESS",pc:0.1,ow:"Perry Ham",ef:8,al:0.2},
+{r:"T.55",tm:"Data Governance",pj:"HASTUS",ph:"2. INITIATION",tk:"Background research",s:"2026-03-30",e:"2026-04-03",st:"IN PROGRESS",pc:1,ow:"Grace Li",ef:8,al:0.2},
+{r:"T.56",tm:"Data Governance",pj:"ETOP",ph:"2. INITIATION",tk:"Scope Refinement",s:"2026-03-30",e:"2026-04-03",st:"IN PROGRESS",pc:0.1,ow:"Perry Ham",ef:8,al:0.2},
+{r:"T.62",tm:"Data Governance",pj:"CAD/AVL - INIT",ph:"7. OPERATIONAL",tk:"Jira Support Wk 52-2",s:"2026-03-30",e:"2026-04-10",st:"IN PROGRESS",pc:1,ow:"Derek Raczka",ef:50,al:0.625},
+{r:"T.65",tm:"Ops Technology",pj:"RTSI",ph:"2. INITIATION",tk:"NOC req UAT RTSI",s:"2025-02-01",e:"2025-04-01",st:"COMPLETE",pc:1,ow:"Eugene Loiko",ef:40,al:0.111},
+{r:"T.66",tm:"Ops Technology",pj:"Work Train",ph:"2. INITIATION",tk:"NOC req WorkTrain",s:"2025-09-01",e:"2025-11-01",st:"COMPLETE",pc:1,ow:"Eugene Loiko",ef:50,al:0.139},
+{r:"T.67",tm:"Ops Technology",pj:"ONTC",ph:"2. INITIATION",tk:"NOC req ONTC",s:"2026-02-01",e:"2026-04-01",st:"COMPLETE",pc:1,ow:"Eugene Loiko",ef:50,al:0.139},
+{r:"T.68",tm:"Ops Technology",pj:"Technology Notice",ph:"7. OPERATIONAL",tk:"Stakeholder engagement",s:"2026-01-01",e:"2026-05-01",st:"IN PROGRESS",pc:0.5,ow:"Eugene Loiko",ef:10,al:0.014},
+{r:"T.70",tm:"Ops Technology",pj:"Change Requests",ph:"7. OPERATIONAL",tk:"Change requests mgmt",s:"2026-04-01",e:"2026-05-01",st:"IN PROGRESS",pc:0.1,ow:"Eugene Loiko",ef:50,al:0.25},
+{r:"T.72",tm:"Ops Technology",pj:"HASTUS",ph:"2. INITIATION",tk:"NOC req HASTUS",s:"2025-11-01",e:"2026-03-30",st:"COMPLETE",pc:1,ow:"Eugene Loiko",ef:40,al:0.045},
+{r:"T.73",tm:"Ops Technology",pj:"RTSI",ph:"7. OPERATIONAL",tk:"RTSI backlog",s:"2026-04-01",e:"2026-05-01",st:"IN PROGRESS",pc:0.2,ow:"Eugene Loiko",ef:30,al:0.15},
+{r:"T.79",tm:"Data Governance",pj:"Training",ph:"7. OPERATIONAL",tk:"DG Training Derek",s:"2026-04-07",e:"2026-04-17",st:"IN PROGRESS",pc:0.2,ow:"Derek Raczka",ef:10,al:0.125},
+{r:"T.85",tm:"Ops Technology",pj:"RTSI",ph:"6. CLOSURE",tk:"RTSI closure",s:"2026-03-30",e:"2026-05-27",st:"IN PROGRESS",pc:0.1,ow:"Eugene Loiko",ef:40,al:0.111},
+{r:"T.86",tm:"Ops Technology",pj:"Work Train",ph:"3. PLANNING",tk:"Trinsight req gathering",s:"2025-11-01",e:"2026-12-15",st:"COMPLETE",pc:1,ow:"Eugene Loiko",ef:110,al:0.047},
+{r:"T.88",tm:"Ops Technology",pj:"Work Train",ph:"4. EXECUTION",tk:"UAT testing",s:"2026-09-04",e:"2026-10-01",st:"NOT STARTED",pc:0,ow:"Eugene Loiko",ef:80,al:0.5},
+{r:"T.89",tm:"Ops Technology",pj:"Work Train",ph:"4. EXECUTION",tk:"Trinsight RTSI prod",s:"2026-10-01",e:"2026-12-20",st:"NOT STARTED",pc:0,ow:"Eugene Loiko",ef:100,al:0.208},
+{r:"T.92",tm:"Ops Technology",pj:"ONTC",ph:"2. INITIATION",tk:"Req and upgrades",s:"2026-04-01",e:"2026-07-30",st:"IN PROGRESS",pc:0.1,ow:"Eugene Loiko",ef:50,al:0.069},
+{r:"T.93",tm:"Ops Technology",pj:"ONTC",ph:"4. EXECUTION",tk:"Integration RTSI UAT",s:"2026-07-30",e:"2026-10-01",st:"NOT STARTED",pc:0,ow:"Eugene Loiko",ef:70,al:0.175},
+{r:"T.97",tm:"Ops Technology",pj:"HASTUS",ph:"3. PLANNING",tk:"HASTUS UAT/Prod planning",s:"2026-03-30",e:"2027-03-30",st:"IN PROGRESS",pc:0.1,ow:"Eugene Loiko",ef:110,al:0.052},
+{r:"T.102",tm:"Data Governance",pj:"IMDB Bus",ph:"4. EXECUTION",tk:"IMDB Bus monitoring",s:"2026-04-09",e:"2026-04-17",st:"IN PROGRESS",pc:0.25,ow:"Derek Raczka",ef:10,al:0.125},
+{r:"T.103",tm:"Data Governance",pj:"CAD/AVL - INIT",ph:"7. OPERATIONAL",tk:"Jira Ticket Support",s:"2026-04-10",e:"2026-04-24",st:"IN PROGRESS",pc:0.1,ow:"Derek Raczka",ef:40,al:0.333},
+{r:"T.107",tm:"Ops Technology",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Bus Survey Confirmations",s:"2026-04-09",e:"2026-04-24",st:"IN PROGRESS",pc:0.2,ow:"Niro Xavier",ef:20,al:0.167},
+{r:"T.113",tm:"Data Governance",pj:"CAD/AVL - INIT",ph:"7. OPERATIONAL",tk:"MobilePlan Regression",s:"2026-04-13",e:"2026-04-17",st:"IN PROGRESS",pc:0.5,ow:"Derek Raczka",ef:8,al:0.2},
+{r:"T.114",tm:"Data Governance",pj:"CAD/AVL - INIT",ph:"7. OPERATIONAL",tk:"INIT Monthly Gov Meeting",s:"2026-04-13",e:"2026-04-16",st:"IN PROGRESS",pc:0.75,ow:"Derek Raczka",ef:4,al:0.1},
+{r:"T.115",tm:"Ops Technology",pj:"CAD/AVL Project",ph:"7. OPERATIONAL",tk:"Action Items",s:"2026-04-07",e:"2026-04-30",st:"IN PROGRESS",pc:0.12,ow:"Niro Xavier",ef:50,al:0.313},
+{r:"T.116",tm:"Ops Technology",pj:"CAD/AVL - INIT",ph:"7. OPERATIONAL",tk:"UAT 90-min cancellation",s:"2026-04-13",e:"2026-04-17",st:"IN PROGRESS",pc:0.5,ow:"Eugene Loiko",ef:20,al:0.5},
+{r:"T.117",tm:"Ops Technology",pj:"Rail Fleet Modernization",ph:"2. INITIATION",tk:"NOC req Rail Fleet",s:"2026-04-13",e:"2026-04-17",st:"IN PROGRESS",pc:0.2,ow:"Eugene Loiko",ef:10,al:0.25},
+{r:"T.37",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"Ops Hub DG Audit C2",s:"2026-11-18",e:"2026-12-18",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:60,al:0.3},
+{r:"T.38",tm:"Data Governance",pj:"Seal of Trust",ph:"7. OPERATIONAL",tk:"RTSI DG Audit C2",s:"2026-12-01",e:"2027-01-01",st:"NOT STARTED",pc:0,ow:"Grace Li",ef:100,al:0.5},
+{r:"T.58",tm:"Ops Technology",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Workshop 4 Customer Comms",s:"2026-03-26",e:"2026-03-31",st:"IN PROGRESS",pc:0.7,ow:"Niro Xavier",ef:10,al:0.25},
+{r:"T.59",tm:"Ops Technology",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Workshop 5 Onboard",s:"2026-04-09",e:"2026-04-14",st:"COMPLETE",pc:1,ow:"Niro Xavier",ef:10,al:0.25},
+{r:"T.60",tm:"Ops Technology",pj:"CAD/AVL Project",ph:"3. PLANNING",tk:"Workshop 6 Migration",s:"2026-04-23",e:"2026-04-28",st:"NOT STARTED",pc:0,ow:"Niro Xavier",ef:10,al:0.25}
+];
 
-    window.onload = function() {
-        // Shared chart options
-        Chart.defaults.font.family = "'DM Sans', sans-serif";
-        Chart.defaults.color = colors.muted;
+var TMS=Array.from(new Set(T.map(function(t){return t.tm}))).sort();
+var OWS=Array.from(new Set(T.map(function(t){return t.ow}))).sort();
+var PJS=Array.from(new Set(T.map(function(t){return t.pj}))).filter(Boolean).sort();
+var comp=T.filter(function(t){return t.st==="COMPLETE"});
+var prog=T.filter(function(t){return t.st==="IN PROGRESS"});
+var notS=T.filter(function(t){return t.st==="NOT STARTED"});
 
-        // --- Status Doughnut ---
-        new Chart(document.getElementById('statusChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Complete', 'In progress', 'Not started'],
-                datasets: [{
-                    data: [31, 45, 38],
-                    backgroundColor: [colors.green, colors.teal, colors.muted],
-                    borderWidth: 0,
-                    cutout: '65%'
-                }]
-            },
-            options: { plugins: { legend: { position: 'bottom' } } }
-        });
+function sC(s){return s==="COMPLETE"?C.gn:s==="IN PROGRESS"?C.teal:C.mu}
+function aP(v){return(v*100).toFixed(0)+"%"}
+function fD(d){return d?new Date(d+"T00:00:00").toLocaleDateString("en-CA",{month:"short",day:"numeric"}):""}
+function pD(s){return s?new Date(s+"T00:00:00"):null}
+function dD(a,b){return a&&b?Math.max(0,Math.round((b-a)/86400000)):0}
+function mOf(d){return new Date(d+"T00:00:00").toLocaleDateString("en-CA",{year:"numeric",month:"short"})}
+function qOf(d){var t=new Date(d+"T00:00:00");return t.getFullYear()+" Q"+Math.ceil((t.getMonth()+1)/3)}
+function yOf(d){return d?d.slice(0,4):""}
+function wOf(d){var t=new Date(d);var j=new Date(t.getFullYear(),0,1);return Math.ceil(((t-j)/86400000+j.getDay()+1)/7)}
 
-        // --- Phase Bar ---
-        new Chart(document.getElementById('phaseChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Execution', 'Operational', 'Planning', 'Initiation', 'Monitoring', 'Closure'],
-                datasets: [{
-                    label: 'Estimated hours',
-                    data: [1767, 1409, 804, 300, 178, 100],
-                    backgroundColor: colors.teal,
-                    borderRadius: 4
-                }]
-            },
-            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
-        });
+// Components
+function Sel(p){return h("label",{style:{fontSize:11,color:C.mu,display:"flex",alignItems:"center",gap:4}},p.label,h("select",{value:p.value,onChange:function(e){p.onChange(e.target.value)},style:{fontSize:11,padding:"3px 6px",borderRadius:4,border:"1px solid "+C.bd,background:"#fff",color:C.tx}},h("option",{value:""},p.all||"All"),p.options.map(function(o){return h("option",{key:o,value:o},o)})))}
+function Stat(p){return h("div",{style:{background:"#fff",borderRadius:8,padding:"14px 16px",borderLeft:"3px solid "+(p.accent||C.teal),boxShadow:"0 1px 3px rgba(26,39,68,.06)"}},h("div",{style:{fontSize:11,color:C.mu}},p.label),h("div",{style:{fontSize:24,fontWeight:700,color:C.navy,fontFamily:"'Fraunces',serif",lineHeight:1.1}},p.value),p.sub?h("div",{style:{fontSize:10,color:C.mu,marginTop:2}},p.sub):null)}
+function Cd(p){return h("div",{style:Object.assign({background:"#fff",borderRadius:8,padding:16,boxShadow:"0 1px 3px rgba(26,39,68,.06)"},p.style||{})},p.children)}
+function H2(p){return h("div",{style:{fontSize:14,fontWeight:700,color:C.navy,fontFamily:"'Fraunces',serif",marginBottom:10}},p.children)}
 
-        // --- Project Effort Bar ---
-        new Chart(document.getElementById('projectEffortChart'), {
-            type: 'bar',
-            data: {
-                labels: ['CAD/AVL', 'Seal of Trust', 'RTSI', 'Work Train', 'HASTUS', 'IVU', 'ONTC', 'INIT Ops'],
-                datasets: [{
-                    data: [1231, 790, 482, 470, 386, 364, 260, 177],
-                    backgroundColor: [colors.navy, colors.teal, colors.teal, colors.muted, colors.muted, colors.muted, colors.muted, colors.muted],
-                    borderRadius: 4
-                }]
-            },
-            options: { plugins: { legend: { display: false } } }
-        });
+// ── CONTROL ROOM ──
+function CtrlP(){
+  var tw=T.filter(function(t){var s=pD(t.s),e=pD(t.e),n=new Date("2026-04-14");return s&&e&&s<=n&&e>=n&&t.st!=="COMPLETE"});
+  var ha=T.filter(function(t){return t.al>=0.4&&t.st!=="COMPLETE"}).sort(function(a,b){return b.al-a.al}).slice(0,5);
+  var sr=T.filter(function(t){var e=pD(t.e);return e&&e<new Date("2026-05-01")&&t.st==="NOT STARTED"});
+  var grLi=Math.round(T.filter(function(t){return t.ow==="Grace Li"&&t.st!=="COMPLETE"}).reduce(function(s,t){return s+t.ef},0));
 
-        // --- Resource Allocation (FTE) ---
-        new Chart(document.getElementById('resourceAllocChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Grace Li', 'Eugene Loiko', 'Derek Raczka', 'Niro Xavier', 'Perry Ham'],
-                datasets: [{
-                    label: 'FTE-weeks',
-                    data: [47.54, 21.70, 5.25, 2.85, 2.62],
-                    backgroundColor: (ctx) => {
-                        const val = ctx.raw;
-                        return val > 20 ? colors.coral : (val > 5 ? colors.gold : colors.teal);
-                    },
-                    borderRadius: 4
-                }]
-            },
-            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
-        });
+  var cols=[
+    {t:"This week's focus",i:[tw.length+" active tasks",prog.length+" in progress","Priority: CAD/AVL design"]},
+    {t:"Cross-team risks",i:["Grace Li 49% of effort","INIT defects XMX-2928","Hiring freeze"],c:C.coral},
+    {t:"Success metrics",i:[comp.length+" completed",Math.round(comp.reduce(function(s,t){return s+t.ef},0))+"h delivered","RTSI migration closed"]},
+    {t:"Continuous improvement",i:["Tracker consolidated","Single dataset","Control room live"]},
+    {t:"Engagement",i:["Weekly cadence set","RAG tracking active","3 items max/week"]}
+  ];
 
-        // --- Owner Effort (Team split) ---
-        new Chart(document.getElementById('ownerEffortChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Grace Li', 'Eugene Loiko', 'Derek Raczka', 'Perry Ham', 'Niro Xavier', 'Nauaroon Das'],
-                datasets: [{
-                    label: 'Hours',
-                    data: [2242, 1722, 290, 154, 104, 46],
-                    backgroundColor: [colors.teal, colors.navy, colors.teal, colors.teal, colors.navy, colors.teal],
-                    borderRadius: 4
-                }]
-            },
-            options: { plugins: { legend: { display: false } } }
-        });
+  return h("div",null,
+    h(Cd,{style:{background:C.navy,marginBottom:14},children:
+      h("div",{style:{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:1}},cols.map(function(c,i){
+        return h("div",{key:i,style:{padding:"10px 12px",borderRight:i<4?"1px solid rgba(255,255,255,.1)":"none"}},
+          h("div",{style:{fontSize:10,fontWeight:700,color:c.c||C.gold,textTransform:"uppercase",marginBottom:6,letterSpacing:0.5}},c.t),
+          c.i.map(function(x,j){return h("div",{key:j,style:{fontSize:11,color:"rgba(255,255,255,.85)",marginBottom:3,lineHeight:1.4}},x)})
+        )
+      }))
+    }),
+    h("div",{style:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:14}},
+      h(Stat,{label:"Completion",value:Math.round(comp.length/T.length*100)+"%",sub:comp.length+" of "+T.length,accent:C.teal}),
+      h(Stat,{label:"Active now",value:tw.length,sub:"Current window",accent:C.gold}),
+      h(Stat,{label:"Slip risk",value:sr.length,sub:"Due soon, not started",accent:C.coral}),
+      h(Stat,{label:"Backlog",value:notS.length,sub:"Not yet started",accent:C.mu})
+    ),
+    h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}},
+      h(Cd,{children:[
+        h(H2,{children:"Predictive insights"}),
+        [{l:"Upcoming activities",v:"CAD/AVL workshops 6-8, IVU Phase 0, Seal of Trust May"},{l:"Slip risk",v:sr.length>0?sr.length+" tasks not started near deadline":"No immediate risk"},{l:"Resource shortage",v:"Grace Li: "+grLi+"h remaining work"},{l:"Bottlenecks",v:"Q3: Seal of Trust overlaps CAD/AVL execution"},{l:"Confidence",v:Math.round(comp.length/T.length*100)+"% complete, tracking to plan"}].map(function(r,i){
+          return h("div",{key:i,style:{padding:"8px 10px",background:i%2?C.ow:C.cream,borderRadius:5,marginBottom:4}},
+            h("div",{style:{fontSize:11,fontWeight:700,color:C.navy}},r.l),
+            h("div",{style:{fontSize:11,color:C.slate,marginTop:2}},r.v))
+        })
+      ]}),
+      h("div",{style:{display:"flex",flexDirection:"column",gap:14}},
+        h(Cd,{children:[
+          h(H2,{children:"KPIs and metrics"}),
+          h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}},
+            [{l:"Delivery",v:Math.round(comp.length/T.length*100)+"%",s:"Completed"},{l:"Throughput",v:comp.length+" tasks",s:"Delivered"},{l:"Avg effort",v:Math.round(T.filter(function(t){return t.ef>0}).reduce(function(s,t){return s+t.ef},0)/Math.max(1,T.filter(function(t){return t.ef>0}).length))+"h",s:"Per task"},{l:"Backlog",v:notS.length,s:"Pending"}].map(function(k,i){
+              return h("div",{key:i,style:{padding:"8px 10px",background:C.cream,borderRadius:5}},
+                h("div",{style:{fontSize:10,color:C.mu}},k.l),
+                h("div",{style:{fontSize:18,fontWeight:700,color:C.navy,fontFamily:"'Fraunces',serif"}},k.v),
+                h("div",{style:{fontSize:9,color:C.mu}},k.s))
+            })
+          )
+        ]}),
+        h(Cd,{children:[
+          h(H2,{children:"High allocation tasks"}),
+          ha.map(function(t){return h("div",{key:t.r,style:{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:"1px solid "+C.bd,fontSize:11}},
+            h("span",{style:{color:C.tx,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:200}},t.r+" "+t.tk),
+            h("span",{style:{color:C.coral,fontWeight:600,flexShrink:0}},aP(t.al)+" "+t.ef+"h"))
+          })
+        ]})
+      )
+    )
+  )
+}
 
-        // --- Heatmap Generation ---
-        const weeklyData = [
-            { wk: "W01", tasks: 32 }, { wk: "W02", tasks: 33 }, { wk: "W03", tasks: 23 },
-            { wk: "W04", tasks: 20 }, { wk: "W05", tasks: 7 }, { wk: "W06", tasks: 7 },
-            { wk: "W07", tasks: 7 }, { wk: "W08", tasks: 8 }, { wk: "W09", tasks: 10 },
-            { wk: "W10", tasks: 10 }, { wk: "W11", tasks: 11 }, { wk: "W12", tasks: 9 },
-            { wk: "W13", tasks: 10 }, { wk: "W14", tasks: 8 }, { wk: "W15", tasks: 8 },
-            { wk: "W16", tasks: 7 }, { wk: "W17", tasks: 9 }, { wk: "W18", tasks: 7 }
-        ];
-        const hgrid = document.getElementById('heatmapGrid');
-        weeklyData.forEach(w => {
-            const cell = document.createElement('div');
-            cell.className = 'heatmap-cell';
-            const bg = w.tasks >= 30 ? colors.coral : (w.tasks >= 15 ? colors.gold : (w.tasks >= 10 ? colors.tealLight : "#b8d4ce"));
-            cell.style.backgroundColor = bg;
-            cell.style.color = w.tasks >= 15 ? 'white' : colors.navy;
-            cell.innerHTML = `<div class="wk-label">${w.wk}</div><div class="wk-val">${w.tasks}</div><div style="font-size:9px">tasks</div>`;
-            hgrid.appendChild(cell);
-        });
+// ── OVERVIEW ──
+function OvP(){
+  var pe={};T.forEach(function(t){if(t.ef>0)pe[t.pj]=(pe[t.pj]||0)+t.ef});
+  var pd=Object.entries(pe).sort(function(a,b){return b[1]-a[1]}).slice(0,8);
+  var mx=Math.max.apply(null,pd.map(function(x){return x[1]}));
+  var sc=[{l:"Complete",v:comp.length,c:C.gn},{l:"In progress",v:prog.length,c:C.teal},{l:"Not started",v:notS.length,c:C.mu}];
+  var arc=0;
 
-        // --- Trend Line ---
-        new Chart(document.getElementById('trendChart'), {
-            type: 'line',
-            data: {
-                labels: weeklyData.map(d => d.wk),
-                datasets: [
-                    { label: 'Concurrent tasks', data: weeklyData.map(d => d.tasks), borderColor: colors.navy, tension: 0.3 },
-                    { label: 'FTE Allocation', data: [4.6, 4.8, 3.4, 3.1, 0.8, 0.8, 0.7, 1.0, 1.9, 1.9, 2.4, 1.8, 2.0, 1.4, 1.4, 1.1, 1.6, 1.3], borderColor: colors.teal, tension: 0.3 }
-                ]
-            }
-        });
+  return h("div",null,
+    h("div",{style:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}},
+      h(Stat,{label:"Tasks",value:T.length,accent:C.navy}),
+      h(Stat,{label:"Effort",value:Math.round(T.reduce(function(s,t){return s+t.ef},0))+"h",accent:C.teal}),
+      h(Stat,{label:"Teams",value:2,sub:"Ops Tech / Data Gov",accent:C.gold}),
+      h(Stat,{label:"Resources",value:OWS.length,accent:C.gn})
+    ),
+    h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginTop:14}},
+      h(Cd,{children:[
+        h(H2,{children:"Status distribution"}),
+        h("div",{style:{display:"flex",alignItems:"center",gap:20,justifyContent:"center",padding:10}},
+          h("svg",{width:150,height:150,viewBox:"-75 -75 150 150"},
+            sc.map(function(s){
+              var p=s.v/T.length,a1=arc;arc+=p;var a2=arc;
+              var x1=Math.cos(2*Math.PI*a1-Math.PI/2)*55,y1=Math.sin(2*Math.PI*a1-Math.PI/2)*55;
+              var x2=Math.cos(2*Math.PI*a2-Math.PI/2)*55,y2=Math.sin(2*Math.PI*a2-Math.PI/2)*55;
+              return h("path",{key:s.l,d:"M"+x1+" "+y1+" A55 55 0 "+(p>0.5?1:0)+" 1 "+x2+" "+y2+" L0 0Z",fill:s.c,stroke:"#fff",strokeWidth:2})
+            }),
+            h("circle",{cx:0,cy:0,r:30,fill:"#fff"})
+          ),
+          h("div",null,sc.map(function(s){return h("div",{key:s.l,style:{display:"flex",alignItems:"center",gap:6,marginBottom:4}},h("div",{style:{width:10,height:10,borderRadius:2,background:s.c}}),h("span",{style:{fontSize:11}},s.l+": "+s.v))}))
+        )
+      ]}),
+      h(Cd,{children:[
+        h(H2,{children:"Effort by project"}),
+        pd.map(function(p,i){return h("div",{key:p[0],style:{display:"flex",alignItems:"center",gap:6,marginBottom:4}},
+          h("div",{style:{width:90,fontSize:10,color:C.tx,textAlign:"right",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},p[0]),
+          h("div",{style:{flex:1,height:16,background:"#eee",borderRadius:3,overflow:"hidden"}},h("div",{style:{height:"100%",width:(p[1]/mx*100)+"%",background:i<2?C.navy:C.teal,borderRadius:3}})),
+          h("div",{style:{width:40,fontSize:10,color:C.mu,textAlign:"right"}},Math.round(p[1])+"h"))
+        })
+      ]})
+    )
+  )
+}
 
-        // --- Project Stacked Bar ---
-        new Chart(document.getElementById('projectStatusChart'), {
-            type: 'bar',
-            data: {
-                labels: ['CAD/AVL', 'RTSI', 'Seal of Trust', 'Work Train', 'INIT Ops', 'HASTUS', 'IVU', 'ONTC'],
-                datasets: [
-                    { label: 'Complete', data: [5, 16, 0, 4, 1, 1, 0, 1], backgroundColor: colors.green },
-                    { label: 'In progress', data: [11, 3, 0, 1, 8, 3, 3, 1], backgroundColor: colors.teal },
-                    { label: 'Not started', data: [8, 0, 12, 4, 0, 4, 4, 4], backgroundColor: colors.muted }
-                ]
-            },
-            options: { indexAxis: 'y', scales: { x: { stacked: true }, y: { stacked: true } } }
-        });
+// ── HEATMAP ──
+function HmP(){
+  var s1=us(""),tm=s1[0],sT=s1[1];
+  var s2=us(""),ow=s2[0],sO=s2[1];
+  var s3=us(""),pr=s3[0],sP=s3[1];
+  var s4=us("month"),gb=s4[0],sG=s4[1];
 
-        // --- Project Snapshot Cards ---
-        const snapshots = [
-            { name: "CAD/AVL", complete: 5, inProgress: 11, notStarted: 8 },
-            { name: "RTSI", complete: 16, inProgress: 3, notStarted: 0 },
-            { name: "Seal of Trust", complete: 0, inProgress: 0, notStarted: 12 },
-            { name: "Work Train", complete: 4, inProgress: 1, notStarted: 4 }
-        ];
-        const sGrid = document.getElementById('projectSnapshotGrid');
-        snapshots.forEach(p => {
-            const total = p.complete + p.inProgress + p.notStarted;
-            const pct = Math.round((p.complete / total) * 100);
-            const color = pct === 100 ? colors.green : (pct > 50 ? colors.teal : (pct > 0 ? colors.gold : colors.muted));
-            sGrid.innerHTML += `
-                <div class="project-mini">
-                    <div style="font-size: 13px; font-weight: 700; color: var(--navy);">${p.name}</div>
-                    <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">${total} tasks</div>
-                    <div class="prog-bg"><div class="prog-fill" style="width: ${pct}%; background: ${color};"></div></div>
-                    <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">${pct}% complete</div>
-                </div>
-            `;
-        });
+  var fl=um(function(){
+    var t=T.filter(function(t){return t.s&&t.e&&(t.ef>0||t.al>0)});
+    if(tm)t=t.filter(function(x){return x.tm===tm});
+    if(ow)t=t.filter(function(x){return x.ow===ow});
+    if(pr)t=t.filter(function(x){return x.pj===pr});
+    return t;
+  },[tm,ow,pr]);
 
-        // --- Radar Chart ---
-        new Chart(document.getElementById('radarChart'), {
-            type: 'radar',
-            data: {
-                labels: ['Visibility', 'Data consistency', 'Decision speed', 'Capacity clarity', 'Risk detection', 'Lean efficiency'],
-                datasets: [
-                    { label: 'Before', data: [25, 20, 30, 15, 20, 30], borderColor: colors.coral, backgroundColor: 'rgba(199, 92, 58, 0.15)' },
-                    { label: 'After', data: [90, 85, 80, 85, 75, 80], borderColor: colors.teal, backgroundColor: 'rgba(15, 123, 108, 0.2)' }
-                ]
-            }
-        });
+  var bk=um(function(){
+    var m={};
+    fl.forEach(function(t){
+      var s=pD(t.s),e=pD(t.e);if(!s||!e||e<=s)return;
+      var d=dD(s,e)||1,hp=t.ef/d;
+      var c=new Date(s);
+      while(c<=e){
+        var ds=c.toISOString().slice(0,10);var k;
+        if(gb==="week")k="W"+String(wOf(ds)).padStart(2,"0")+" "+yOf(ds);
+        else if(gb==="month")k=mOf(ds);
+        else if(gb==="quarter")k=qOf(ds);
+        else k=yOf(ds);
+        if(!m[k])m[k]={key:k,hours:0,aS:0,tasks:{},sd:ds};
+        m[k].hours+=hp;m[k].aS+=t.al/d;m[k].tasks[t.r]=1;
+        c.setDate(c.getDate()+1);
+      }
+    });
+    return Object.values(m).map(function(b){return{key:b.key,hours:b.hours,tasks:Object.keys(b.tasks).length,pct:Math.min(100,Math.round(b.aS*100)),sd:b.sd}}).sort(function(a,b){return a.sd.localeCompare(b.sd)});
+  },[fl,gb]);
 
-        // --- Comparison List ---
-        const comps = [
-            { dim: "Portfolio visibility", before: "Fragmented", after: "Single view" },
-            { dim: "Data sources", before: "Multiple sheets", after: "Centralized" },
-            { dim: "Capacity management", before: "Assumption-based", after: "Fact-based" }
-        ];
-        const cList = document.getElementById('comparisonList');
-        comps.forEach(c => {
-            cList.innerHTML += `
-                <div class="comp-row">
-                    <div style="font-weight: 600; color: var(--navy);">${c.dim}</div>
-                    <div class="comp-tag-before">${c.before}</div>
-                    <div class="comp-tag-after">${c.after}</div>
-                </div>
-            `;
-        });
+  function gc(v){return v>=120?C.coral:v>=60?C.gold:v>=20?C.tl:"#b8d4ce"}
+  var ms=gb==="week"?52:gb==="month"?24:gb==="quarter"?16:6;
+  var cs=Math.min(bk.length,gb==="year"?6:gb==="quarter"?8:gb==="month"?12:18);
+  var peak=bk.length?bk.reduce(function(a,b){return a.hours>b.hours?a:b}):{key:"--",hours:0};
+  var totalEf=Math.round(fl.reduce(function(s,t){return s+t.ef},0));
 
-        // --- Team Workload ---
-        new Chart(document.getElementById('teamWorkloadChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Ops Technology', 'Data Governance'],
-                datasets: [{ label: 'Tasks', data: [61, 53], backgroundColor: [colors.navy, colors.teal] }]
-            },
-            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
-        });
-    }
+  return h("div",null,
+    h("div",{style:{display:"flex",gap:10,flexWrap:"wrap",marginBottom:14}},
+      h(Sel,{label:"Team",value:tm,onChange:sT,options:TMS}),
+      h(Sel,{label:"Owner",value:ow,onChange:sO,options:OWS}),
+      h(Sel,{label:"Project",value:pr,onChange:sP,options:PJS}),
+      h(Sel,{label:"Group",value:gb,onChange:sG,options:["week","month","quarter","year"],all:""})
+    ),
+    h("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:14}},
+      h(Stat,{label:"Effort (filtered)",value:totalEf+"h",accent:C.navy}),
+      h(Stat,{label:"Tasks",value:fl.length,sub:"of "+T.length,accent:C.teal}),
+      h(Stat,{label:"Peak",value:peak.key,sub:Math.round(peak.hours)+"h",accent:C.coral})
+    ),
+    // HEATMAP GRID
+    h(Cd,{children:[
+      h(H2,{children:"Workload heatmap ("+gb+")"}),
+      h("div",{style:{display:"grid",gridTemplateColumns:"repeat("+cs+",1fr)",gap:5,overflowX:"auto"}},
+        bk.slice(0,ms).map(function(b){
+          var fc=b.hours>=60?"#fff":C.navy;
+          var fc2=b.hours>=60?"rgba(255,255,255,.8)":C.mu;
+          return h("div",{key:b.key,className:"hm-cell",title:b.key+": "+Math.round(b.hours)+"h, "+b.tasks+" tasks, "+b.pct+"%",style:{background:gc(b.hours),borderRadius:6,padding:"10px 5px",textAlign:"center",minWidth:52,cursor:"default"}},
+            h("div",{style:{fontSize:9,fontWeight:600,color:fc}},b.key.replace(/20\d\d/g,"").trim()),
+            h("div",{style:{fontSize:18,fontWeight:700,color:fc,fontFamily:"'Fraunces',serif",lineHeight:1.1,margin:"2px 0"}},Math.round(b.hours)),
+            h("div",{style:{fontSize:8,color:fc2}},"hrs"),
+            h("div",{style:{fontSize:10,fontWeight:600,color:b.hours>=60?"rgba(255,255,255,.95)":C.slate,marginTop:3}},b.pct+"%"),
+            h("div",{style:{fontSize:8,color:fc2}},b.tasks+" tasks")
+          )
+        })
+      ),
+      h("div",{style:{display:"flex",gap:14,marginTop:12,justifyContent:"center"}},
+        [{c:C.coral,l:"Critical (120+h)"},{c:C.gold,l:"High (60-119)"},{c:C.tl,l:"Moderate (20-59)"},{c:"#b8d4ce",l:"Normal (<20)"}].map(function(x){
+          return h("div",{key:x.l,style:{display:"flex",alignItems:"center",gap:4}},h("div",{style:{width:12,height:12,borderRadius:3,background:x.c}}),h("span",{style:{fontSize:10,color:C.mu}},x.l))
+        })
+      )
+    ]}),
+    // BAR CHART
+    h(Cd,{style:{marginTop:14},children:[
+      h(H2,{children:"Hours by "+gb}),
+      (function(){
+        var data=bk.slice(0,ms);
+        var maxH=Math.max.apply(null,data.map(function(b){return b.hours}).concat([1]));
+        var bw=Math.max(12,Math.floor(680/data.length)-3);
+        var ch=160;
+        return h("div",{style:{overflowX:"auto"}},
+          h("svg",{width:Math.max(700,data.length*(bw+3)+60),height:ch+30,style:{display:"block"}},
+            data.map(function(b,i){
+              var bh=Math.max(2,b.hours/maxH*(ch-10));
+              var x=40+i*(bw+3);
+              return h("g",{key:i},
+                h("rect",{x:x,y:ch-bh,width:bw,height:bh,rx:3,fill:gc(b.hours)}),
+                h("text",{x:x+bw/2,y:ch-bh-4,fontSize:8,fill:C.mu,textAnchor:"middle"},Math.round(b.hours)),
+                i%Math.max(1,Math.ceil(data.length/14))===0?h("text",{x:x+bw/2,y:ch+14,fontSize:8,fill:C.mu,textAnchor:"middle"},b.key.replace(/20\d\d/g,"").trim()):null
+              )
+            })
+          )
+        )
+      })()
+    ]})
+  )
+}
+
+// ── GANTT ──
+function GtP(){
+  var s1=us(""),tm=s1[0],sT=s1[1];
+  var s2=us(""),ow=s2[0],sO=s2[1];
+  var s3=us({}),ex=s3[0],sE=s3[1];
+  var s4=us("project"),gb=s4[0],sG=s4[1];
+
+  var fl=um(function(){
+    var t=T.filter(function(t){return t.s&&t.e});
+    if(tm)t=t.filter(function(x){return x.tm===tm});
+    if(ow)t=t.filter(function(x){return x.ow===ow});
+    return t;
+  },[tm,ow]);
+
+  var gr=um(function(){
+    var m={};fl.forEach(function(t){var k=gb==="project"?t.pj:gb==="team"?t.tm:t.ow;if(!m[k])m[k]=[];m[k].push(t)});
+    return Object.entries(m).sort(function(a,b){return a[0].localeCompare(b[0])});
+  },[fl,gb]);
+
+  var ad=fl.flatMap(function(t){return[pD(t.s),pD(t.e)]}).filter(Boolean);
+  var mn=ad.length?new Date(Math.min.apply(null,ad)):new Date("2026-01-01");
+  var mx=ad.length?new Date(Math.max.apply(null,ad)):new Date("2027-12-31");
+  var td=dD(mn,mx)||1;
+  function bL(d){var dt=pD(d);return dt?Math.max(0,(dt-mn)/86400000/td*100)+"%":"0%"}
+  function bW(s,e){var a=pD(s),b=pD(e);return a&&b?Math.max(0.5,dD(a,b)/td*100)+"%":"0%"}
+
+  var mo=[];var cu=new Date(mn);cu.setDate(1);
+  while(cu<=mx){mo.push({l:cu.toLocaleDateString("en-CA",{month:"short",year:"2-digit"}),p:Math.max(0,(cu-mn)/86400000/td*100)+"%"});cu.setMonth(cu.getMonth()+1)}
+
+  function tg(k){sE(function(p){var n={};for(var x in p)n[x]=p[x];n[k]=!p[k];return n})}
+
+  return h("div",null,
+    h("div",{style:{display:"flex",gap:10,flexWrap:"wrap",marginBottom:14}},
+      h(Sel,{label:"Team",value:tm,onChange:sT,options:TMS}),
+      h(Sel,{label:"Owner",value:ow,onChange:sO,options:OWS}),
+      h(Sel,{label:"Group",value:gb,onChange:sG,options:["project","team","owner"],all:""})
+    ),
+    h(Cd,{children:[
+      h(H2,{children:"Portfolio timeline"}),
+      h("div",{style:{display:"flex",gap:8,marginBottom:8}},
+        [{s:"COMPLETE",c:C.gn},{s:"IN PROGRESS",c:C.teal},{s:"NOT STARTED",c:C.mu}].map(function(x){
+          return h("div",{key:x.s,style:{display:"flex",alignItems:"center",gap:4}},h("div",{style:{width:12,height:8,borderRadius:2,background:x.c}}),h("span",{style:{fontSize:10,color:C.mu}},x.s))
+        })
+      ),
+      h("div",{style:{overflowX:"auto"}},
+        h("div",{style:{minWidth:900}},
+          h("div",{style:{position:"relative",height:18,borderBottom:"1px solid "+C.bd,marginBottom:4,marginLeft:250}},
+            mo.map(function(m,i){return h("div",{key:i,style:{position:"absolute",left:m.p,fontSize:8,color:C.mu,fontWeight:600,whiteSpace:"nowrap"}},m.l)})
+          ),
+          gr.map(function(g){
+            var gn=g[0],gt=g[1],ie=ex[gn];
+            var dn=gt.filter(function(t){return t.st==="COMPLETE"}).length;
+            var ef=gt.reduce(function(s,t){return s+t.ef},0);
+            return h("div",{key:gn},
+              h("div",{onClick:function(){tg(gn)},style:{display:"flex",alignItems:"center",cursor:"pointer",padding:"5px 0",borderBottom:"1px solid "+C.bd,background:ie?C.cream:"transparent"}},
+                h("div",{style:{width:250,display:"flex",alignItems:"center",gap:5,paddingLeft:4}},
+                  h("span",{style:{fontSize:10,color:C.mu,fontFamily:"monospace"}},ie?"\u25BC":"\u25B6"),
+                  h("span",{style:{fontSize:11,fontWeight:700,color:C.navy}},gn),
+                  h("span",{style:{fontSize:9,color:C.mu}},gt.length+" | "+dn+" done | "+Math.round(ef)+"h")
+                ),
+                h("div",{style:{flex:1,position:"relative",height:12}},
+                  gt.map(function(t){return h("div",{key:t.r,style:{position:"absolute",left:bL(t.s),width:bW(t.s,t.e),height:5,top:3,borderRadius:2,background:sC(t.st),opacity:0.7}})})
+                )
+              ),
+              ie?gt.sort(function(a,b){return(a.s||"").localeCompare(b.s||"")}).map(function(t){
+                return h("div",{key:t.r,className:"gantt-row",style:{display:"flex",alignItems:"center",padding:"3px 0",borderBottom:"1px solid #f0ede8"}},
+                  h("div",{style:{width:250,paddingLeft:18,overflow:"hidden"}},
+                    h("div",{style:{fontSize:10,color:C.tx,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"},title:t.tk},t.r+" "+t.tk),
+                    h("div",{style:{fontSize:8,color:C.mu}},t.ow+" | "+t.ef+"h | "+aP(t.al)+" | "+fD(t.s)+" - "+fD(t.e))
+                  ),
+                  h("div",{style:{flex:1,position:"relative",height:16}},
+                    h("div",{style:{position:"absolute",left:bL(t.s),width:bW(t.s,t.e),height:10,top:3,borderRadius:3,background:sC(t.st),opacity:0.3}}),
+                    t.pc>0?h("div",{style:{position:"absolute",left:bL(t.s),width:"calc("+bW(t.s,t.e)+" * "+t.pc+")",height:10,top:3,borderRadius:3,background:sC(t.st)}}):null,
+                    t.pc>0.1?h("div",{style:{position:"absolute",left:"calc("+bL(t.s)+" + 3px)",top:4,fontSize:7,color:"#fff",fontWeight:600}},Math.round(t.pc*100)+"%"):null
+                  )
+                )
+              }):null
+            )
+          })
+        )
+      )
+    ]})
+  )
+}
+
+// ── RADAR ──
+function RdP(){
+  var rd=[{m:"Visibility",b:25,a:90},{m:"Consistency",b:20,a:85},{m:"Decision speed",b:30,a:80},{m:"Capacity",b:15,a:85},{m:"Risk detect",b:20,a:75},{m:"Lean",b:30,a:80}];
+  var n=rd.length,cx=140,cy=140,R=110;
+  function pt(i,v){var a=2*Math.PI*i/n-Math.PI/2;return[cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100]}
+
+  return h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}},
+    h(Cd,{children:[
+      h(H2,{children:"Capability maturity shift"}),
+      h("svg",{width:"100%",height:300,viewBox:"0 0 280 300",style:{display:"block"}},
+        [20,40,60,80,100].map(function(lv){
+          var pts=[];for(var i=0;i<n;i++)pts.push(pt(i,lv).join(","));
+          return h("polygon",{key:lv,points:pts.join(" "),fill:"none",stroke:C.bd,strokeWidth:0.5})
+        }),
+        rd.map(function(d,i){var p=pt(i,100);return h("line",{key:"a"+i,x1:cx,y1:cy,x2:p[0],y2:p[1],stroke:C.bd,strokeWidth:0.5})}),
+        h("polygon",{points:rd.map(function(d,i){return pt(i,d.b).join(",")}).join(" "),fill:C.coral,fillOpacity:0.15,stroke:C.coral,strokeWidth:1.5}),
+        h("polygon",{points:rd.map(function(d,i){return pt(i,d.a).join(",")}).join(" "),fill:C.teal,fillOpacity:0.2,stroke:C.teal,strokeWidth:1.5}),
+        rd.map(function(d,i){var p=pt(i,118);return h("text",{key:"l"+i,x:p[0],y:p[1]+3,fontSize:8,fill:C.tx,textAnchor:"middle"},d.m)}),
+        rd.map(function(d,i){var p=pt(i,d.b);return h("circle",{key:"b"+i,cx:p[0],cy:p[1],r:2.5,fill:C.coral})}),
+        rd.map(function(d,i){var p=pt(i,d.a);return h("circle",{key:"a"+i,cx:p[0],cy:p[1],r:2.5,fill:C.teal})})
+      ),
+      h("div",{style:{display:"flex",gap:14,justifyContent:"center",marginTop:6}},
+        [{c:C.coral,l:"Before"},{c:C.teal,l:"After"}].map(function(x){return h("div",{key:x.l,style:{display:"flex",alignItems:"center",gap:4}},h("div",{style:{width:10,height:10,borderRadius:2,background:x.c}}),h("span",{style:{fontSize:10,color:C.mu}},x.l))})
+      )
+    ]}),
+    h(Cd,{children:[
+      h(H2,{children:"Before vs. after"}),
+      [{d:"Visibility",b:"Fragmented views",a:"Single end-to-end view"},{d:"Data sources",b:"Multiple spreadsheets",a:"One centralized dataset"},{d:"Duplication",b:"Manual reconciliation",a:"Enter once, reuse"},{d:"Reporting",b:"Manual, point-in-time",a:"Near real-time"},{d:"Capacity",b:"Assumption-based",a:"Fact-based view"},{d:"Risk",b:"Reactive",a:"Proactive, trend-based"},{d:"Decisions",b:"Slower, validation",a:"Faster, confident"}].map(function(r){
+        return h("div",{key:r.d,style:{display:"grid",gridTemplateColumns:"90px 1fr 1fr",gap:5,fontSize:10,alignItems:"center",marginBottom:5}},
+          h("div",{style:{fontWeight:600,color:C.navy}},r.d),
+          h("div",{style:{background:"#fdf2f0",padding:"4px 8px",borderRadius:3,color:C.coral}},r.b),
+          h("div",{style:{background:"#eef8f5",padding:"4px 8px",borderRadius:3,color:C.teal}},r.a))
+      })
+    ]})
+  )
+}
+
+// ── MAIN APP ──
+function App(){
+  var st=us("control"),tab=st[0],setTab=st[1];
+  var tabs=[{id:"control",l:"Control room"},{id:"overview",l:"Portfolio overview"},{id:"heatmap",l:"Workload heatmap"},{id:"gantt",l:"Project timeline"},{id:"radar",l:"Before and after"}];
+  var panels={control:h(CtrlP),overview:h(OvP),heatmap:h(HmP),gantt:h(GtP),radar:h(RdP)};
+
+  return h("div",{style:{fontFamily:"'DM Sans',sans-serif",background:C.cream,minHeight:"100vh"}},
+    h("div",{style:{background:C.navy,padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}},
+      h("div",null,
+        h("div",{style:{fontSize:16,fontWeight:700,color:"#fff",fontFamily:"'Fraunces',serif"}},"Consolidated work tracker"),
+        h("div",{style:{fontSize:11,color:C.mu,marginTop:1}},"Operations Technology and Data | Portfolio visibility, planning and control")
+      ),
+      h("div",{style:{fontSize:11,color:C.mu}},"FY2026 | "+T.length+" tasks | "+OWS.length+" resources")
+    ),
+    h("div",{style:{background:"#fff",borderBottom:"1px solid "+C.bd,padding:"0 20px",display:"flex"}},
+      tabs.map(function(t){return h("button",{key:t.id,onClick:function(){setTab(t.id)},style:{background:"none",border:"none",borderBottom:tab===t.id?"2px solid "+C.teal:"2px solid transparent",padding:"10px 14px",fontSize:12,fontWeight:tab===t.id?600:400,color:tab===t.id?C.teal:C.mu,cursor:"pointer"}},t.l)})
+    ),
+    h("div",{style:{padding:"14px 20px 30px"}},panels[tab])
+  )
+}
+
+ReactDOM.render(h(App),document.getElementById("root"));
 </script>
-
 </body>
 </html>
